@@ -1,0 +1,3 @@
+rootProject.name = 'assemblies2'
+
+include ':app'
