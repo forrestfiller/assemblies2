@@ -21,7 +21,7 @@ import {
 } from '../../fixtures'
 
 import { globals, messagesStyles } from '../../styles'
-
+import { rowHasChanged } from '../../utilities'
 const styles = messagesStyles
 
 class MessagesView extends Component {
@@ -72,8 +72,7 @@ class MessagesView extends Component {
 	dataSource(){
 		return (
 			new ListView.DataSource({
-				rowHasChanged: (r1,r2) => r1 != r2
-			})
+				rowHasChanged: rowHasChanged })
 			.cloneWithRows(FakeConversations)
 		)
 	}
