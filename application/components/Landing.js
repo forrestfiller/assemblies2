@@ -1,5 +1,4 @@
-/* application/components/Landing.js */
-import Icon from 'react-native-vector-icons/MaterialIcons'
+
 import React, { Component } from 'react'
 import { Text, TouchableOpacity, Image, View } from 'react-native'
 import Colors from '../styles/colors'
@@ -47,7 +46,7 @@ class Landing extends Component {
           style={globals.button}
           onPress={this.visitDashboard}
         >
-          <Icon name='ios-person' size={36} color='white' />
+
           <Text style={globals.buttonText}>
             {" "} Go to Dashboard
           </Text>
