@@ -39,7 +39,7 @@ class Dashboard extends Component {
         <Icon.TabBarItemIOS
           title='Profile'
           selected={this.state.selectedTab === 'Profile'}
-          iconName='ios-person'
+          iconName='person'
           onPress={() => this.setState({ selectedTab: 'Profile' })}
         >
           <ProfileView />
