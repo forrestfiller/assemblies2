@@ -3,7 +3,7 @@ A Meetup-like iOS App with React-Native
 
 ### Current Features
 
-- A** splash page with buttons routing the user to authentication options
+- A splash page with buttons routing the user to authentication options
 
 - A tabbed UI with:
   - Activities
