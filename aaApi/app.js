@@ -5,20 +5,22 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var sessions = require('client-sessions')
 var mongoose = require('mongoose')
+require('dotenv').config()
+
+mongoose.connect(DB_URL, function(err, res){
+  if (err){
+    console.log('DB CONNECTION FAIL: '+err)
+  }
+  else {
+    console.log('DB CONNECTION SUCCESS: ')
+  }
+})
 
 var routes = require('./routes/index');
 var api = require('./routes/api')
-
-var dbUrl = 'mongodb://localhost/assembly2'
-mongoose.connect(dbUrl, function(err, res){
-  if (err){
-    console.log('DB CONNECTION FAIL')
-  }
-  else {
-    console.log('DB CONNECTION SUCCESS')
-  }
-})
+var account = require('./routes/account')
 
 var app = express();
 
@@ -32,10 +34,19 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(sessions({
+	cookieName: 'session',
+	secret: process.env.SESSION_SECRET,
+	duration: 24*60*60*1000, // 1 day
+	activeDuration: 30*60*1000
+}))
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes)
 app.use('/api', api)
+app.use('/account', account)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
