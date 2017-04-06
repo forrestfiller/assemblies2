@@ -9,7 +9,7 @@ var sessions = require('client-sessions')
 var mongoose = require('mongoose')
 require('dotenv').config()
 
-mongoose.connect(DB_URL, function(err, res){
+mongoose.connect(process.env.DB_URL, function(err, res){
   if (err){
     console.log('DB CONNECTION FAIL: '+err)
   }

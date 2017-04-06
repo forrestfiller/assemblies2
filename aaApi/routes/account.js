@@ -42,7 +42,8 @@ router.get('/:action', function(req, res, next) {
 	if (action == 'logout'){
 		req.session.reset()
 		res.json({
-			confirmation:'success'
+			confirmation:'success',
+			message:'logout'
 		})
 	}
 })
@@ -68,7 +69,7 @@ router.post('/:action', function(req, res, next) {
 	}
 	if (action == 'login'){
 		controllers.user
-		.get({username: req.body.username}, true) //only time i pass true!
+		.get({username: req.body.username}, true) // only time i pass true!
 
 		.then(function(users){
 			if (users == 0){
@@ -85,7 +86,7 @@ router.post('/:action', function(req, res, next) {
 			if (isPasswordCorrect == false){
 				res.json({
 					confirmation:'fail',
-					message:'Wrong Password!'
+					message:'wrong password!'
 				})
 				return
 			}
