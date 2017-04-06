@@ -13,6 +13,7 @@ import BackButton from '../../shared/BackButton'
 import Colors from '../../styles/colors'
 import { globals, formStyles } from '../../styles'
 import { API, DEV } from '../../config'
+import { Headers } from '../../fixtures'
 
 const styles = formStyles
 
@@ -31,38 +32,46 @@ class Login extends Component {
   }
 
 	loginUser(){
+    if (DEV) { console.log('Logging in...') }
     fetch(`${API}/users/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: Headers,
       body: JSON.stringify({
         username: this.state.email,
         password: this.state.password
       })
     })
     .then(response => response.json())
-    .then(data => {
-      if (response.status === 401){
-        this.setState({ errorMsg: 'Email or password was incorrect.' })
-      } else {
-        fetch(`${API}/users/me`, {
-          method: {
-            'Content-Type': 'application/json',
-            'Set-Cookie': `sid=${sid}`
-          }
-        })
-        .then(response => response.json())
-        .then(user => console.log(`USER`, user))
-        .catch(err => {
-           this.setState({ errorMsg: 'Connection error.' })
-        })
-        .done()
-      }
-    })
-    .catch(err => {
-      this.setState({ errorMsg: 'Connection error.' })
-    })
+    .then(data => this.loginStatus(data))
+    .catch(err => this.connectionError())
     .done()
 	}
+
+  loginStatus(response){
+    if (response.status === 401){
+      this.setState({ errorMsg: 'Email or password was incorrect.' })
+    } else {
+      this.fetchUserInfo(response.id)
+    }
+  }
+
+  fetchUserData(sid){
+     fetch(`${API}/users/me`, { headers: entend(Headers, { 'Set-Cookie': `sid=${sid}`}) })
+     .then(response => response.json())
+     .then(user => this.updateUserInfo(user))
+     .catch(err => this.connectionError())
+     .done()
+  }
+
+  updateUserInfo(user){
+     if (DEV) { console.log('Logged in user: ', user) }
+     this.props.updateUser(user)
+     this.props.navigator.push({ name: 'Dashboard' })
+  }
+
+  connectionError(){
+    this.setState({ errorMsg: 'Connection error.' })
+  }
 
 	changePassword(password){
 		this.setState({ password })
