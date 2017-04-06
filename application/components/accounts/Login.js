@@ -12,6 +12,7 @@ import NavigationBar from 'react-native-navbar'
 import BackButton from '../../shared/BackButton'
 import Colors from '../../styles/colors'
 import { globals, formStyles } from '../../styles'
+import { API, DEV } from '../../config'
 
 const styles = formStyles
 
@@ -30,7 +31,37 @@ class Login extends Component {
   }
 
 	loginUser(){
-		// login user with username and password
+    fetch(`${API}/users/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: this.state.email,
+        password: this.state.password
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (response.status === 401){
+        this.setState({ errorMsg: 'Email or password was incorrect.' })
+      } else {
+        fetch(`${API}/users/me`, {
+          method: {
+            'Content-Type': 'application/json',
+            'Set-Cookie': `sid=${sid}`
+          }
+        })
+        .then(response => response.json())
+        .then(user => console.log(`USER`, user))
+        .catch(err => {
+           this.setState({ errorMsg: 'Connection error.' })
+        })
+        .done()
+      }
+    })
+    .catch(err => {
+      this.setState({ errorMsg: 'Connection error.' })
+    })
+    .done()
 	}
 
 	changePassword(password){
